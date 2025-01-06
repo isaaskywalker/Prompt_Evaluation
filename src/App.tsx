@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Home from './pages/Home';
 import Settings from './pages/Settings';
-import { AuthProvider } from './hooks/useAuth';
+import { useAuth } from './hooks/useAuth';
 import './styles/variables.css';
 import './styles/utilities.css';
 import './styles/themes/lightTheme.css';
