@@ -1,3 +1,6 @@
+/* src/styles/layout/Grid.css */
+
+/* Container */
 .container {
   width: 100%;
   max-width: 1200px;
@@ -5,19 +8,95 @@
   padding: var(--spacing-md);
 }
 
+/* Row */
 .row {
   display: flex;
   flex-wrap: wrap;
   margin: 0 -var(--spacing-sm);
 }
 
+/* Basic column */
 .col {
   flex: 1;
   padding: var(--spacing-sm);
 }
 
+/* Specific column sizes */
+.col-6 {
+  flex: 0 0 50%;
+  padding: var(--spacing-sm);
+}
+
+.col-12 {
+  flex: 0 0 100%;
+  padding: var(--spacing-sm);
+}
+
+/* Grid specific to hyperparameters */
+.hyperparameters-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-md);
+  margin: var(--spacing-md) 0;
+}
+
+.hyperparameters-card {
+  background: var(--light-color);
+  border-radius: 8px;
+  padding: var(--spacing-md);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive design */
 @media (max-width: 768px) {
-  .col {
+  .col, .col-6 {
     flex-basis: 100%;
   }
+
+  .hyperparameters-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Utility classes for spacing */
+.gap-md {
+  gap: var(--spacing-md);
+}
+
+.gap-lg {
+  gap: var(--spacing-lg);
+}
+
+/* New utility classes for the hyperparameter layout */
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+}
+
+/* Form group styling */
+.form-group {
+  margin-bottom: var(--spacing-md);
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: var(--spacing-xs);
+}
+
+.form-group input {
+  width: 100%;
+  padding: var(--spacing-sm);
+  border: 1px solid var(--secondary-color);
+  border-radius: 4px;
+}
+
+.form-group small {
+  display: block;
+  margin-top: var(--spacing-xs);
+  color: var(--secondary-color);
 }
