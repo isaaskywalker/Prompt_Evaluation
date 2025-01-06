@@ -1,0 +1,23 @@
+/* CSS 리셋 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* 기본 폰트 설정 */
+body {
+  font-family: 'Arial, sans-serif';
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+/* 링크 스타일 */
+a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
