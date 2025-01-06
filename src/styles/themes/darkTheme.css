@@ -1,0 +1,10 @@
+.theme-dark {
+  --background-color: #343a40;
+  --text-color: #f8f9fa;
+  /* 추가적인 다크 테마 변수들 */
+}
+
+body.theme-dark {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
