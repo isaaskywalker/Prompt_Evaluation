@@ -21,6 +21,7 @@ const Settings = () => {
     epochs: 10,
   });
 
+  // 초기 데이터 로드
   useEffect(() => {
     if (currentUser) {
       setEmail(currentUser.email || '');
