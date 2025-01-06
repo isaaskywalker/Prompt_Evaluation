@@ -54,7 +54,7 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
     currentUser,
     login,
     signup,
-    logout, // 이 줄 뒤에 쉼표가 필요함
+    logout, // 쉼표 확인
   };
 
   return (
