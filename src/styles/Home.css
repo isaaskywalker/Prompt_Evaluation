@@ -35,6 +35,36 @@
   color: var(--primary-color);
 }
 
+/* API 선택기 스타일 */
+.api-selector {
+  margin-bottom: var(--spacing-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.api-select {
+  padding: var(--spacing-sm);
+  border: 1px solid var(--secondary-color);
+  border-radius: 4px;
+  font-family: var(--font-primary);
+  font-size: var(--font-size-medium);
+  background-color: white;
+  width: 200px;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.api-select:hover {
+  border-color: var(--primary-color);
+}
+
+.api-select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+
 /* 반응형 디자인 */
 @media (max-width: 768px) {
   .container {
@@ -43,5 +73,14 @@
   
   .section {
     padding: var(--spacing-md);
+  }
+
+  .api-selector {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .api-select {
+    width: 100%;
   }
 }
