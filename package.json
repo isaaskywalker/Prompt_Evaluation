@@ -13,8 +13,10 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1"
+    // 기타 의존성...
   },
   "devDependencies": {
+    // 개발용 의존성...
   },
   "author": "Your Name",
   "license": "MIT"
