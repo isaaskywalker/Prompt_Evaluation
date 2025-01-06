@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import '../styles/layout/Grid.css';
 
 const Hyperparameters = ({ onSave }) => {
-  // Existing ML hyperparameters
+  // ML hyperparameters
   const [learningRate, setLearningRate] = useState(0.001);
   const [batchSize, setBatchSize] = useState(32);
   const [epochs, setEpochs] = useState(10);
@@ -14,7 +15,7 @@ const Hyperparameters = ({ onSave }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const hyperparams = {
+    onSave({
       learningRate,
       batchSize,
       epochs,
@@ -22,63 +23,57 @@ const Hyperparameters = ({ onSave }) => {
       topK,
       frequencyPenalty,
       presencePenalty
-    };
-    onSave(hyperparams);
+    });
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
-      <h2 className="text-xl font-bold mb-6 text-center">하이퍼파라미터 설정</h2>
+    <div className="container">
+      <h2>하이퍼파라미터 설정</h2>
       
-      <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Left Column - ML Hyperparameters */}
-        <div className="space-y-6 p-6 bg-gray-50 rounded-lg">
-          <h3 className="text-lg font-semibold mb-4">ML Hyperparameters</h3>
-          
-          <div className="space-y-4">
-            <div>
-              <label className="block mb-2">학습률 (Learning Rate): </label>
+      <form onSubmit={handleSubmit}>
+        <div className="hyperparameters-grid">
+          {/* ML Hyperparameters Card */}
+          <div className="hyperparameters-card">
+            <h3>ML Hyperparameters</h3>
+            
+            <div className="form-group">
+              <label>학습률 (Learning Rate): </label>
               <input 
                 type="number" 
                 step="0.0001" 
                 value={learningRate} 
                 onChange={(e) => setLearningRate(parseFloat(e.target.value))}
-                className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
                 required 
               />
             </div>
 
-            <div>
-              <label className="block mb-2">배치 크기 (Batch Size): </label>
+            <div className="form-group">
+              <label>배치 크기 (Batch Size): </label>
               <input 
                 type="number" 
                 value={batchSize} 
                 onChange={(e) => setBatchSize(parseInt(e.target.value))}
-                className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
                 required 
               />
             </div>
 
-            <div>
-              <label className="block mb-2">에포크 수 (Epochs): </label>
+            <div className="form-group">
+              <label>에포크 수 (Epochs): </label>
               <input 
                 type="number" 
                 value={epochs} 
                 onChange={(e) => setEpochs(parseInt(e.target.value))}
-                className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
                 required 
               />
             </div>
           </div>
-        </div>
 
-        {/* Right Column - GPT Hyperparameters */}
-        <div className="space-y-6 p-6 bg-gray-50 rounded-lg">
-          <h3 className="text-lg font-semibold mb-4">GPT Hyperparameters</h3>
-          
-          <div className="space-y-4">
-            <div>
-              <label className="block mb-2">Temperature: </label>
+          {/* GPT Hyperparameters Card */}
+          <div className="hyperparameters-card">
+            <h3>GPT Hyperparameters</h3>
+            
+            <div className="form-group">
+              <label>Temperature: </label>
               <input 
                 type="number" 
                 step="0.1" 
@@ -86,28 +81,26 @@ const Hyperparameters = ({ onSave }) => {
                 max="2" 
                 value={temperature}
                 onChange={(e) => setTemperature(parseFloat(e.target.value))}
-                className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
                 required 
               />
-              <small className="text-gray-500">Controls randomness (0.0 to 2.0)</small>
+              <small>Controls randomness (0.0 to 2.0)</small>
             </div>
 
-            <div>
-              <label className="block mb-2">Top K: </label>
+            <div className="form-group">
+              <label>Top K: </label>
               <input 
                 type="number" 
                 min="1" 
                 max="100" 
                 value={topK}
                 onChange={(e) => setTopK(parseInt(e.target.value))}
-                className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
                 required 
               />
-              <small className="text-gray-500">Controls diversity (1 to 100)</small>
+              <small>Controls diversity (1 to 100)</small>
             </div>
 
-            <div>
-              <label className="block mb-2">Frequency Penalty: </label>
+            <div className="form-group">
+              <label>Frequency Penalty: </label>
               <input 
                 type="number" 
                 step="0.1" 
@@ -115,14 +108,13 @@ const Hyperparameters = ({ onSave }) => {
                 max="2.0" 
                 value={frequencyPenalty}
                 onChange={(e) => setFrequencyPenalty(parseFloat(e.target.value))}
-                className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
                 required 
               />
-              <small className="text-gray-500">Prevents repetition (-2.0 to 2.0)</small>
+              <small>Prevents repetition (-2.0 to 2.0)</small>
             </div>
 
-            <div>
-              <label className="block mb-2">Presence Penalty: </label>
+            <div className="form-group">
+              <label>Presence Penalty: </label>
               <input 
                 type="number" 
                 step="0.1" 
@@ -130,22 +122,30 @@ const Hyperparameters = ({ onSave }) => {
                 max="2.0" 
                 value={presencePenalty}
                 onChange={(e) => setPresencePenalty(parseFloat(e.target.value))}
-                className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
                 required 
               />
-              <small className="text-gray-500">Encourages new topics (-2.0 to 2.0)</small>
+              <small>Encourages new topics (-2.0 to 2.0)</small>
             </div>
           </div>
         </div>
 
-        {/* Submit Button - Full Width */}
-        <div className="col-span-1 md:col-span-2 mt-6">
-          <button 
-            type="submit"
-            className="w-full bg-blue-500 text-white py-3 px-4 rounded-lg hover:bg-blue-600 transition-colors"
-          >
-            저장
-          </button>
+        <div className="row">
+          <div className="col-12">
+            <button 
+              type="submit"
+              style={{
+                width: '100%',
+                padding: 'var(--spacing-md)',
+                backgroundColor: 'var(--primary-color)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer'
+              }}
+            >
+              저장
+            </button>
+          </div>
         </div>
       </form>
     </div>
