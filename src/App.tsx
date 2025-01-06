@@ -2,14 +2,21 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Home from './pages/Home';
 import Settings from './pages/Settings';
-import { useAuth } from './hooks/useAuth';
+import { useAuth, AuthProvider } from './hooks/useAuth';  // AuthProvider 추가
 import './styles/variables.css';
 import './styles/utilities.css';
 import './styles/themes/lightTheme.css';
 import './styles/themes/darkTheme.css';
 
-const App = () => {
-  const [theme, setTheme] = useState('light'); // 'light' 또는 'dark'
+// 스타일 타입 정의
+interface StylesType {
+  nav: React.CSSProperties;
+  link: React.CSSProperties;
+  themeButton: React.CSSProperties;
+}
+
+const App: React.FC = () => {
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
   const toggleTheme = () => {
     setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
@@ -36,7 +43,8 @@ const App = () => {
   );
 };
 
-const styles = {
+// 스타일 객체에 타입 지정
+const styles: StylesType = {
   nav: {
     padding: '10px',
     backgroundColor: '#f0f0f0',
