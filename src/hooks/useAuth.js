@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext, createContext, ReactNode } from 'react';
+import { useEffect, useState, useContext, createContext, ReactNode, FC } from 'react';
 import { 
   User, 
   onAuthStateChanged, 
@@ -20,7 +20,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // 인증 제공자 컴포넌트
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
+export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
