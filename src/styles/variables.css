@@ -1,5 +1,17 @@
+@import url('https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/css/SpoqaHanSansNeo.css');
+
 :root {
-  /* 색상 변수 */
+  /* 폰트 패밀리 */
+  --font-primary: 'Spoqa Han Sans Neo', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  
+  /* 폰트 가중치 */
+  --font-weight-thin: 100;
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+
+  /* 기존 색상 변수 */
   --primary-color: #007bff;
   --secondary-color: #6c757d;
   --success-color: #28a745;
@@ -9,15 +21,21 @@
   --light-color: #f8f9fa;
   --dark-color: #343a40;
 
-  /* 폰트 크기 */
+  /* 기존 폰트 크기 */
   --font-size-small: 0.875rem;
   --font-size-medium: 1rem;
   --font-size-large: 1.25rem;
 
-  /* 간격 */
+  /* 기존 간격 */
   --spacing-xs: 4px;
   --spacing-sm: 8px;
   --spacing-md: 16px;
   --spacing-lg: 24px;
   --spacing-xl: 32px;
+}
+
+/* 기본 폰트 적용 */
+body {
+  font-family: var(--font-primary);
+  font-weight: var(--font-weight-regular);
 }
