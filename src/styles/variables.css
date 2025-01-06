@@ -1,41 +1,64 @@
-@import url('https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/css/SpoqaHanSansNeo.css');
+import React from 'react';
 
-:root {
-  /* 폰트 패밀리 */
-  --font-primary: 'Spoqa Han Sans Neo', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-  
-  /* 폰트 가중치 */
-  --font-weight-thin: 100;
-  --font-weight-light: 300;
-  --font-weight-regular: 400;
-  --font-weight-medium: 500;
-  --font-weight-bold: 700;
+const LoginForm = () => {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-light-color">
+      <div className="w-full max-w-md space-y-8 rounded-lg bg-white p-8 shadow-lg">
+        {/* Welcome Message */}
+        <div className="text-center">
+          <h2 className="mb-6 text-2xl font-bold">환영합니다!</h2>
+        </div>
+        
+        {/* Login Form */}
+        <form className="space-y-6">
+          <div className="space-y-2">
+            <label 
+              htmlFor="email" 
+              className="block text-sm font-medium"
+            >
+              Email:
+            </label>
+            <input
+              id="email"
+              type="email"
+              className="w-full rounded-md border border-gray-300 p-2 focus:border-primary-color focus:outline-none"
+            />
+          </div>
 
-  /* 기존 색상 변수 */
-  --primary-color: #007bff;
-  --secondary-color: #6c757d;
-  --success-color: #28a745;
-  --danger-color: #dc3545;
-  --warning-color: #ffc107;
-  --info-color: #17a2b8;
-  --light-color: #f8f9fa;
-  --dark-color: #343a40;
+          <div className="space-y-2">
+            <label 
+              htmlFor="password" 
+              className="block text-sm font-medium"
+            >
+              Password:
+            </label>
+            <input
+              id="password"
+              type="password"
+              className="w-full rounded-md border border-gray-300 p-2 focus:border-primary-color focus:outline-none"
+            />
+          </div>
 
-  /* 기존 폰트 크기 */
-  --font-size-small: 0.875rem;
-  --font-size-medium: 1rem;
-  --font-size-large: 1.25rem;
+          <button
+            type="submit"
+            className="w-full rounded-md bg-primary-color py-2 text-white hover:bg-blue-600 focus:outline-none"
+          >
+            로그인
+          </button>
 
-  /* 기존 간격 */
-  --spacing-xs: 4px;
-  --spacing-sm: 8px;
-  --spacing-md: 16px;
-  --spacing-lg: 24px;
-  --spacing-xl: 32px;
-}
+          <div className="text-center text-sm">
+            <span>계정이 없으신가요? </span>
+            <a 
+              href="#" 
+              className="text-primary-color hover:underline"
+            >
+              회원가입
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
 
-/* 기본 폰트 적용 */
-body {
-  font-family: var(--font-primary);
-  font-weight: var(--font-weight-regular);
-}
+export default LoginForm;
