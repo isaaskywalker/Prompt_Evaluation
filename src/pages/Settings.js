@@ -1,18 +1,27 @@
+// src/pages/Settings.tsx
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import Hyperparameters from '../components/Hyperparameters';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 
-const Settings = () => {
+// 스타일 타입 정의
+interface StylesType {
+  container: React.CSSProperties;
+  section: React.CSSProperties;
+  form: React.CSSProperties;
+  formGroup: React.CSSProperties;
+}
+
+const Settings: React.FC = () => {
   const { currentUser, updateProfile, updatePassword } = useAuth();
   const [email, setEmail] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
-  const [openaiApiKey, setOpenaiApiKey] = useState('');  // OpenAI API 키
-  const [claudeApiKey, setClaudeApiKey] = useState('');  // Claude API 키
-  const [errors, setErrors] = useState({});
+  const [openaiApiKey, setOpenaiApiKey] = useState('');
+  const [claudeApiKey, setClaudeApiKey] = useState('');
+  const [errors, setErrors] = useState<{[key: string]: string}>({});
   const [success, setSuccess] = useState('');
   const [hyperparams, setHyperparams] = useState({
     learningRate: 0.001,
@@ -38,9 +47,9 @@ const Settings = () => {
     }
   };
 
-  // ... handleProfileUpdate 함수는 그대로 유지 ...
+  // ... 나머지 함수들은 동일하게 유지 ...
 
-  const handleApiKeysSave = async (e) => {
+  const handleApiKeysSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!currentUser) return;
 
@@ -54,46 +63,34 @@ const Settings = () => {
       );
       setSuccess('API 키가 성공적으로 저장되었습니다.');
     } catch (err) {
-      setErrors({ ...errors, apiKey: err.message });
+      if (err instanceof Error) {
+        setErrors({ ...errors, apiKey: err.message });
+      }
     }
   };
 
-  // ... handleHyperparametersSave 함수는 그대로 유지 ...
+  // ... JSX 부분은 동일하게 유지 ...
 
-  return (
-    <div style={styles.container}>
-      {/* ... 계정 정보 수정 섹션은 그대로 유지 ... */}
-      
-      <section style={styles.section}>
-        <h2>API 설정</h2>
-        <form onSubmit={handleApiKeysSave} style={styles.form}>
-          <div style={styles.formGroup}>
-            <label>OpenAI API 키:</label>
-            <input
-              type="password"
-              value={openaiApiKey}
-              onChange={(e) => setOpenaiApiKey(e.target.value)}
-              placeholder="OpenAI API 키를 입력하세요"
-            />
-          </div>
-          <div style={styles.formGroup}>
-            <label>Claude API 키:</label>
-            <input
-              type="password"
-              value={claudeApiKey}
-              onChange={(e) => setClaudeApiKey(e.target.value)}
-              placeholder="Claude API 키를 입력하세요"
-            />
-          </div>
-          <button type="submit">API 키 저장</button>
-        </form>
-      </section>
-
-      {/* ... 하이퍼파라미터 섹션은 그대로 유지 ... */}
-    </div>
-  );
 };
 
-// ... styles 객체는 그대로 유지 ...
+const styles: StylesType = {
+  container: {
+    padding: '20px',
+    maxWidth: '800px',
+    margin: '0 auto',
+  },
+  section: {
+    marginBottom: '30px',
+  },
+  form: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  formGroup: {
+    marginBottom: '15px',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+};
 
 export default Settings;
