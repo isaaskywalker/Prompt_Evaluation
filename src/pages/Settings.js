@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import Hyperparameters from '../components/Hyperparameters';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { db } from '../firebase';
 
 const Settings = () => {
   const { currentUser, updateProfile, updatePassword } = useAuth();
@@ -8,6 +10,7 @@ const Settings = () => {
   const [displayName, setDisplayName] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
+  const [apiKey, setApiKey] = useState('');  // API 키 state 추가
   const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState('');
   const [hyperparams, setHyperparams] = useState({
@@ -20,8 +23,20 @@ const Settings = () => {
     if (currentUser) {
       setEmail(currentUser.email || '');
       setDisplayName(currentUser.displayName || '');
+      // API 키 로드
+      loadApiKey();
     }
   }, [currentUser]);
+
+  // API 키 로드 함수
+  const loadApiKey = async () => {
+    if (currentUser) {
+      const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+      if (userDoc.exists()) {
+        setApiKey(userDoc.data().apiKey || '');
+      }
+    }
+  };
 
   const handleProfileUpdate = async (e) => {
     e.preventDefault();
@@ -56,9 +71,23 @@ const Settings = () => {
     }
   };
 
+  const handleApiKeySave = async (e) => {
+    e.preventDefault();
+    if (!currentUser) return;
+
+    try {
+      await setDoc(doc(db, 'users', currentUser.uid), 
+        { apiKey }, 
+        { merge: true }
+      );
+      setSuccess('API 키가 성공적으로 저장되었습니다.');
+    } catch (err) {
+      setErrors({ ...errors, apiKey: err.message });
+    }
+  };
+
   const handleHyperparametersSave = (newHyperparams) => {
     setHyperparams(newHyperparams);
-    // 필요에 따라 서버로 하이퍼파라미터를 저장할 수 있습니다.
     console.log('저장된 기본 하이퍼파라미터:', newHyperparams);
   };
 
@@ -112,20 +141,30 @@ const Settings = () => {
       </section>
       
       <section style={styles.section}>
+        <h2>API 설정</h2>
+        <form onSubmit={handleApiKeySave} style={styles.form}>
+          <div style={styles.formGroup}>
+            <label>API 키:</label>
+            <input
+              type="password"
+              value={apiKey}
+              onChange={(e) => setApiKey(e.target.value)}
+              placeholder="OpenAI API 키를 입력하세요"
+              required
+            />
+          </div>
+          <button type="submit">API 키 저장</button>
+        </form>
+      </section>
+
+      <section style={styles.section}>
         <h2>기본 하이퍼파라미터 설정</h2>
         <Hyperparameters onSave={handleHyperparametersSave} initialParams={hyperparams} />
-      </section>
-      
-      <section style={styles.section}>
-        <h2>애플리케이션 설정</h2>
-        {/* 애플리케이션 설정 폼을 추가할 수 있습니다 */}
-        <p>현재는 기본 하이퍼파라미터 설정만 가능합니다. 추가 설정은 추후 업데이트 예정입니다.</p>
       </section>
     </div>
   );
 };
 
-// 간단한 인라인 스타일링 예시
 const styles = {
   container: {
     padding: '20px',
