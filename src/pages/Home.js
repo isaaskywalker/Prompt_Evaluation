@@ -13,6 +13,7 @@ const Home = () => {
   const [outputData, setOutputData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [selectedApi, setSelectedApi] = useState('openai');
   const [hyperparams, setHyperparams] = useState({
     learningRate: 0.001,
     batchSize: 32,
@@ -24,44 +25,71 @@ const Home = () => {
     setError(null);
 
     try {
-      // API 키 가져오기
       const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
       
-      if (!userDoc.exists() || !userDoc.data().apiKey) {
-        throw new Error(
-          '설정에서 API 키를 먼저 입력해주세요. Settings 메뉴에서 OpenAI API 키를 등록할 수 있습니다.'
-        );
+      if (!userDoc.exists()) {
+        throw new Error('사용자 설정을 찾을 수 없습니다.');
       }
 
-      const apiKey = userDoc.data().apiKey;
+      const userData = userDoc.data();
+      const openaiApiKey = userData.openaiApiKey;
+      const claudeApiKey = userData.claudeApiKey;
 
-      // OpenAI API 요청
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`
-        },
-        body: JSON.stringify({
-          model: "gpt-3.5-turbo",
-          messages: [
-            {
-              "role": "user",
-              "content": prompt
-            }
-          ],
-          temperature: hyperparams.learningRate,  // 적절한 매핑이 필요할 수 있습니다
-          max_tokens: hyperparams.batchSize * 10  // 적절한 매핑이 필요할 수 있습니다
-        })
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error?.message || 'API 요청 실패');
+      if (selectedApi === 'openai' && !openaiApiKey) {
+        throw new Error('OpenAI API 키를 설정에서 먼저 입력해주세요.');
+      }
+      if (selectedApi === 'claude' && !claudeApiKey) {
+        throw new Error('Claude API 키를 설정에서 먼저 입력해주세요.');
       }
 
-      const data = await response.json();
-      setOutputData(data.choices[0].message.content);
+      let response;
+      let formattedOutput;
+
+      if (selectedApi === 'openai') {
+        response = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${openaiApiKey}`
+          },
+          body: JSON.stringify({
+            model: "gpt-3.5-turbo",
+            messages: [{ "role": "user", "content": prompt }],
+            temperature: hyperparams.learningRate,
+            max_tokens: hyperparams.batchSize * 10
+          })
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.error?.message || 'OpenAI API 요청 실패');
+        }
+        formattedOutput = data.choices[0].message.content;
+
+      } else {
+        response = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': claudeApiKey,
+            'anthropic-version': '2023-06-01'
+          },
+          body: JSON.stringify({
+            model: "claude-3-opus-20240229",
+            max_tokens: hyperparams.batchSize * 10,
+            messages: [{ "role": "user", "content": prompt }]
+          })
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.error?.message || 'Claude API 요청 실패');
+        }
+        formattedOutput = data.content[0].text;
+      }
+
+      setOutputData(formattedOutput);
+
     } catch (err) {
       setError(err.message || '프롬프트 처리에 실패했습니다.');
       console.error('API 요청 오류:', err);
@@ -89,6 +117,17 @@ const Home = () => {
       <h1 className="main-title">AI 프롬프트 애플리케이션</h1>
       
       <section className="section">
+        <div className="api-selector">
+          <label>AI 모델 선택:</label>
+          <select 
+            value={selectedApi} 
+            onChange={(e) => setSelectedApi(e.target.value)}
+            className="api-select"
+          >
+            <option value="openai">OpenAI GPT-3.5</option>
+            <option value="claude">Anthropic Claude</option>
+          </select>
+        </div>
         <PromptInput onSubmit={handlePromptSubmit} />
       </section>
 
