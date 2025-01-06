@@ -4,7 +4,9 @@ import PromptInput from '../components/PromptInput';
 import Hyperparameters from '../components/Hyperparameters';
 import Output from '../components/Output';
 import { useAuth } from '../hooks/useAuth';
-import '../styles/Home.css';  // 새로 생성할 CSS 파일
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../firebase';
+import '../styles/Home.css';
 
 const Home = () => {
   const { currentUser } = useAuth();
@@ -20,21 +22,49 @@ const Home = () => {
   const handlePromptSubmit = async (prompt) => {
     setLoading(true);
     setError(null);
+
     try {
-      const response = await fetch('/api/process-prompt', {
+      // API 키 가져오기
+      const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+      
+      if (!userDoc.exists() || !userDoc.data().apiKey) {
+        throw new Error(
+          '설정에서 API 키를 먼저 입력해주세요. Settings 메뉴에서 OpenAI API 키를 등록할 수 있습니다.'
+        );
+      }
+
+      const apiKey = userDoc.data().apiKey;
+
+      // OpenAI API 요청
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
         },
-        body: JSON.stringify({ prompt, hyperparams }),
+        body: JSON.stringify({
+          model: "gpt-3.5-turbo",
+          messages: [
+            {
+              "role": "user",
+              "content": prompt
+            }
+          ],
+          temperature: hyperparams.learningRate,  // 적절한 매핑이 필요할 수 있습니다
+          max_tokens: hyperparams.batchSize * 10  // 적절한 매핑이 필요할 수 있습니다
+        })
       });
+
       if (!response.ok) {
-        throw new Error('API 요청 실패');
+        const errorData = await response.json();
+        throw new Error(errorData.error?.message || 'API 요청 실패');
       }
+
       const data = await response.json();
-      setOutputData(data);
+      setOutputData(data.choices[0].message.content);
     } catch (err) {
       setError(err.message || '프롬프트 처리에 실패했습니다.');
+      console.error('API 요청 오류:', err);
     } finally {
       setLoading(false);
     }
