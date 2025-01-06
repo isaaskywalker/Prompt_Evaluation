@@ -1,17 +1,20 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
-// 필요한 다른 Firebase 서비스를 임포트하세요
 
-// Firebase 설정 객체
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID",
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
 };
+
+// Firebase 초기화 확인
+if (!firebaseConfig.apiKey || !firebaseConfig.authDomain || !firebaseConfig.projectId) {
+  throw new Error('Firebase 설정이 올바르지 않습니다. 환경 변수를 확인해주세요.');
+}
 
 // Firebase 앱 초기화
 const app = initializeApp(firebaseConfig);
@@ -19,4 +22,3 @@ const app = initializeApp(firebaseConfig);
 // Firebase 서비스 초기화
 export const auth = getAuth(app);
 export const db = getFirestore(app);
-// 필요한 다른 Firebase 서비스를 내보내세요
