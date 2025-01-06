@@ -18,6 +18,10 @@ const Home = () => {
     learningRate: 0.001,
     batchSize: 32,
     epochs: 10,
+    temperature: 0.7,
+    topK: 40,
+    frequencyPenalty: 0.0,
+    presencePenalty: 0.0
   });
 
   const handlePromptSubmit = async (prompt) => {
@@ -32,31 +36,39 @@ const Home = () => {
       }
 
       const userData = userDoc.data();
-      const openaiApiKey = userData.openaiApiKey;
-      const claudeApiKey = userData.claudeApiKey;
+      const { openaiApiKey, gpt4ApiKey, claudeApiKey } = userData;
 
-      if (selectedApi === 'openai' && !openaiApiKey) {
-        throw new Error('OpenAI API 키를 설정에서 먼저 입력해주세요.');
-      }
-      if (selectedApi === 'claude' && !claudeApiKey) {
-        throw new Error('Claude API 키를 설정에서 먼저 입력해주세요.');
+      // API 키 검증
+      if ((selectedApi === 'openai' && !openaiApiKey) || 
+          (selectedApi === 'gpt4' && !gpt4ApiKey) ||
+          (selectedApi === 'claude' && !claudeApiKey)) {
+        throw new Error(`${
+          selectedApi === 'openai' ? 'OpenAI' :
+          selectedApi === 'gpt4' ? 'GPT-4.0' : 'Claude'
+        } API 키를 설정에서 먼저 입력해주세요.`);
       }
 
       let response;
       let formattedOutput;
 
-      if (selectedApi === 'openai') {
+      const commonOpenAIConfig = {
+        messages: [{ "role": "user", "content": prompt }],
+        temperature: hyperparams.temperature,
+        max_tokens: hyperparams.batchSize * 10,
+        frequency_penalty: hyperparams.frequencyPenalty,
+        presence_penalty: hyperparams.presencePenalty
+      };
+
+      if (selectedApi === 'openai' || selectedApi === 'gpt4') {
         response = await fetch('https://api.openai.com/v1/chat/completions', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${openaiApiKey}`
+            'Authorization': `Bearer ${selectedApi === 'gpt4' ? gpt4ApiKey : openaiApiKey}`
           },
           body: JSON.stringify({
-            model: "gpt-3.5-turbo",
-            messages: [{ "role": "user", "content": prompt }],
-            temperature: hyperparams.learningRate,
-            max_tokens: hyperparams.batchSize * 10
+            ...commonOpenAIConfig,
+            model: selectedApi === 'gpt4' ? "gpt-4" : "gpt-3.5-turbo",
           })
         });
 
@@ -77,7 +89,8 @@ const Home = () => {
           body: JSON.stringify({
             model: "claude-3-opus-20240229",
             max_tokens: hyperparams.batchSize * 10,
-            messages: [{ "role": "user", "content": prompt }]
+            messages: [{ "role": "user", "content": prompt }],
+            temperature: hyperparams.temperature
           })
         });
 
@@ -125,6 +138,7 @@ const Home = () => {
             className="api-select"
           >
             <option value="openai">OpenAI GPT-3.5</option>
+            <option value="gpt4">OpenAI GPT-4.0</option>
             <option value="claude">Anthropic Claude</option>
           </select>
         </div>
