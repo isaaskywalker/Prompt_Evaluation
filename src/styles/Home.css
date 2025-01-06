@@ -1,86 +1,167 @@
+/* src/styles/Home.css */
+
+/* Main container */
 .container {
-  max-width: 800px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: var(--spacing-xl);
+  padding: var(--spacing-md);
 }
 
-.main-title {
-  font-family: var(--font-primary);
-  font-size: var(--font-size-large);
-  font-weight: var(--font-weight-bold);
-  margin-bottom: var(--spacing-xl);
-  color: var(--dark-color);
-}
-
-.section {
-  margin-bottom: var(--spacing-xl);
-  padding: var(--spacing-lg);
-  background-color: var(--light-color);
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
+/* Authentication container */
 .auth-container {
   max-width: 400px;
-  margin: var(--spacing-xl) auto;
-  padding: var(--spacing-lg);
+  margin: 48px auto;
+  padding: var(--spacing-md);
   text-align: center;
 }
 
 .auth-title {
-  font-family: var(--font-primary);
-  font-size: var(--font-size-large);
-  font-weight: var(--font-weight-bold);
-  margin-bottom: var(--spacing-lg);
+  font-size: 2rem;
   color: var(--primary-color);
+  margin-bottom: var(--spacing-lg);
 }
 
-/* API 선택기 스타일 */
-.api-selector {
+/* Main title */
+.main-title {
+  font-size: 1.75rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--dark-color);
+  text-align: center;
   margin-bottom: var(--spacing-lg);
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
+}
+
+/* Section styling */
+.section {
+  background-color: var(--light-color);
+  border-radius: 8px;
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* API selector styling */
+.api-selector {
+  margin-bottom: var(--spacing-md);
+}
+
+.api-selector label {
+  display: block;
+  margin-bottom: var(--spacing-xs);
+  font-weight: var(--font-weight-medium);
 }
 
 .api-select {
+  width: 100%;
   padding: var(--spacing-sm);
   border: 1px solid var(--secondary-color);
   border-radius: 4px;
-  font-family: var(--font-primary);
-  font-size: var(--font-size-medium);
   background-color: white;
-  width: 200px;
-  cursor: pointer;
+  font-size: var(--font-size-medium);
+  margin-bottom: var(--spacing-md);
   transition: border-color 0.2s ease;
-}
-
-.api-select:hover {
-  border-color: var(--primary-color);
 }
 
 .api-select:focus {
   outline: none;
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
-/* 반응형 디자인 */
+/* Loading state */
+.loading {
+  text-align: center;
+  padding: var(--spacing-md);
+  color: var(--secondary-color);
+}
+
+/* Error message */
+.error {
+  background-color: var(--danger-color);
+  color: white;
+  padding: var(--spacing-md);
+  border-radius: 4px;
+  margin-bottom: var(--spacing-md);
+}
+
+/* Output section */
+.output-container {
+  background-color: white;
+  border: 1px solid var(--secondary-color);
+  border-radius: 4px;
+  padding: var(--spacing-md);
+  margin-top: var(--spacing-md);
+}
+
+/* Responsive design */
 @media (max-width: 768px) {
   .container {
-    padding: var(--spacing-md);
+    padding: var(--spacing-sm);
   }
-  
+
   .section {
     padding: var(--spacing-md);
   }
 
-  .api-selector {
-    flex-direction: column;
-    align-items: flex-start;
+  .main-title {
+    font-size: 1.5rem;
   }
+}
 
-  .api-select {
-    width: 100%;
-  }
+/* Helper classes */
+.text-center {
+  text-align: center;
+}
+
+.mt-md {
+  margin-top: var(--spacing-md);
+}
+
+.mb-md {
+  margin-bottom: var(--spacing-md);
+}
+
+/* Button styles */
+.button {
+  background-color: var(--primary-color);
+  color: white;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: var(--font-size-medium);
+  transition: background-color 0.2s ease;
+}
+
+.button:hover {
+  background-color: #0056b3;
+}
+
+.button:disabled {
+  background-color: var(--secondary-color);
+  cursor: not-allowed;
+}
+
+/* Form elements */
+.form-group {
+  margin-bottom: var(--spacing-md);
+}
+
+.form-label {
+  display: block;
+  margin-bottom: var(--spacing-xs);
+  font-weight: var(--font-weight-medium);
+}
+
+.form-input {
+  width: 100%;
+  padding: var(--spacing-sm);
+  border: 1px solid var(--secondary-color);
+  border-radius: 4px;
+  font-size: var(--font-size-medium);
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
