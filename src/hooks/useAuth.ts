@@ -62,7 +62,6 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
       {loading ? <div>Loading...</div> : children}
     </AuthContext.Provider>
   );
-};
 
 // useAuth 훅
 export const useAuth = (): AuthContextType => {
