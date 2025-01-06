@@ -8,7 +8,7 @@ import {
 } from 'firebase/auth';
 import { auth } from '../firebase';
 
-// 인증 컨텍스트 타입 정의
+// Auth context type definition
 interface AuthContextType {
   currentUser: User | null;
   login: (email: string, password: string) => Promise<void>;
@@ -16,36 +16,36 @@ interface AuthContextType {
   logout: () => Promise<void>;
 }
 
-// 인증 컨텍스트 생성
+// Create auth context
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// 인증 제공자 컴포넌트
+// Auth provider component
 export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
-  // 인증 상태 변경 리스너 설정
+  // Set up auth state change listener
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
       setLoading(false);
     });
 
-    // 청소 함수
+    // Cleanup function
     return unsubscribe;
   }, []);
 
-  // 로그인 함수
+  // Login function
   const login = async (email: string, password: string) => {
     await signInWithEmailAndPassword(auth, email, password);
   };
 
-  // 회원가입 함수
+  // Signup function
   const signup = async (email: string, password: string) => {
     await createUserWithEmailAndPassword(auth, email, password);
   };
 
-  // 로그아웃 함수
+  // Logout function
   const logout = async () => {
     await signOut(auth);
   };
@@ -54,7 +54,7 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
     currentUser,
     login,
     signup,
-    logout, // 쉼표 확인
+    logout
   };
 
   return (
@@ -62,8 +62,9 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
       {loading ? <div>Loading...</div> : children}
     </AuthContext.Provider>
   );
+};
 
-// useAuth 훅
+// useAuth hook
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (context === undefined) {
